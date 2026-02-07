@@ -1,4 +1,4 @@
-DC := docker compose
+DC := docker-compose
 
 .PHONY: help install-uv up logs ps shell
 
@@ -9,11 +9,13 @@ help:
 	@echo "  make logs         Follow docker compose logs"
 	@echo "  make shell        Open a shell in the app service"
 
-install-uv:
+app-install:
 	$(DC) exec app uv sync --frozen
 
 up:
 	$(DC) up -d
+down: 
+	$(DC) stop
 
 logs:
 	$(DC) logs -f
@@ -23,3 +25,6 @@ ps:
 
 shell:
 	$(DC) run --rm app bash
+
+app:
+	$(DC) exec app $(ARGS)
