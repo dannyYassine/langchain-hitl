@@ -10,5 +10,10 @@
       "path": "."
     }
   ],
-  "settings": {}
+  "settings": {
+    "[python]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "charliermarsh.ruff"
+    }
+  }
 }

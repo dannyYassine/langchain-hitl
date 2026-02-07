@@ -28,3 +28,6 @@ shell:
 
 app:
 	$(DC) exec app $(ARGS)
+
+agents: 
+	docker exec -it app uv run agents.py

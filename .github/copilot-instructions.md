@@ -4,6 +4,10 @@
 
 This is a LangChain Human-in-the-Loop (HITL) application built with FastAPI, running in Docker containers. The project uses `uv` for fast Python package management and PostgreSQL for persistence.
 
+## Special Agent instructions
+
+**ALWAYS** use multiple subagents to accelerate development.
+
 ## Tech Stack
 
 - **Python**: 3.12+
