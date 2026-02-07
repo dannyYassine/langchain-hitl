@@ -588,6 +588,7 @@ dependencies = [
     { name = "langchain-openai" },
     { name = "langchain-postgres" },
     { name = "psycopg", extra = ["binary"] },
+    { name = "pydantic" },
 ]
 
 [package.metadata]
@@ -597,6 +598,7 @@ requires-dist = [
     { name = "langchain-openai" },
     { name = "langchain-postgres" },
     { name = "psycopg", extras = ["binary"] },
+    { name = "pydantic", specifier = ">=2.12.5" },
 ]
 
 [[package]]

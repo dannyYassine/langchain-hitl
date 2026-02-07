@@ -13,6 +13,6 @@ COPY app/pyproject.toml app/uv.lock ./
 
 # Copy source code and install the project
 COPY app/ .
-RUN uv sync --frozen
+# RUN uv sync --frozen
 
-CMD ["uv", "run", "fastapi", "dev", "--host", "0.0.0.0"]
+# CMD ["uv", "run", "fastapi", "dev", "--host", "0.0.0.0"]

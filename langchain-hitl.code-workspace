@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": ".github"
+    },
+    {
+      "path": "app"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {}
+}
