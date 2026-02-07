@@ -1,0 +1,13 @@
+[project]
+name = "langchain-hitl"
+version = "0.1.0"
+description = "FastAPI + LangChain Human-in-the-Loop app"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]",
+    "langchain",
+    "langchain-openai",
+    "langchain-postgres",
+    "psycopg[binary]",
+]
