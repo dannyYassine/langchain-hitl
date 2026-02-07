@@ -11,4 +11,5 @@ dependencies = [
     "langchain-postgres",
     "psycopg[binary]",
     "pydantic>=2.12.5",
+    "requests>=2.32.5",
 ]

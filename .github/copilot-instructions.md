@@ -84,7 +84,7 @@ app = FastAPI(title="Service Name")
 
 class RequestModel(BaseModel):
     field: str
-    
+
 @app.post("/endpoint")
 async def endpoint(data: RequestModel):
     """Always include docstrings for endpoints."""
@@ -153,7 +153,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     postgres_user: str
     openai_api_key: str
-    
+
     class Config:
         env_file = ".env"
 
@@ -218,6 +218,33 @@ docker exec app uv run ruff format .
 docker exec app uv run mypy app/
 ```
 
+## Patterns
+
+### Dependency Management Workflow
+
+**ALWAYS** run `uv sync` immediately after installing any package:
+
+```bash
+# ✅ Correct pattern
+docker exec app uv add requests
+docker exec app uv sync
+
+# ✅ Adding multiple packages
+docker exec app uv add requests httpx pydantic
+docker exec app uv sync
+
+# ✅ Adding dev dependencies
+docker exec app uv add --dev pytest ruff
+docker exec app uv sync
+```
+
+**Why this matters:**
+
+- Ensures lock file is updated with new dependencies
+- Resolves transitive dependencies correctly
+- Prevents runtime import errors
+- Keeps development environment consistent
+
 ## Database Operations
 
 ### Connecting to PostgreSQL
@@ -281,13 +308,13 @@ from app.agents import create_agent
 async def endpoint(data: RequestModel):
     """
     Process data and return result.
-    
+
     Args:
         data: Request data model
-        
+
     Returns:
         Result dictionary with processed data
-        
+
     Raises:
         HTTPException: If processing fails
     """

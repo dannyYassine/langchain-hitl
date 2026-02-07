@@ -589,6 +589,7 @@ dependencies = [
     { name = "langchain-postgres" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic" },
+    { name = "requests" },
 ]
 
 [package.metadata]
@@ -599,6 +600,7 @@ requires-dist = [
     { name = "langchain-postgres" },
     { name = "psycopg", extras = ["binary"] },
     { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "requests", specifier = ">=2.32.5" },
 ]
 
 [[package]]
