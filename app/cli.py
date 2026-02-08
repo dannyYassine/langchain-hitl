@@ -84,16 +84,17 @@ if __name__ == "__main__":
         )
 
         # Handle interrupts
-        while "__interrupt__" in response:
+        if "__interrupt__" in response:
             decisions, should_continue = handle_interrupt(response["__interrupt__"])
 
-            if not should_continue:
-                # User rejected - stop processing and wait for new input
-                break
-
+            # Always send decisions to agent to properly update state
             response = agent.invoke(
                 Command(resume={"decisions": decisions}), config=config
             )
+
+            if not should_continue:
+                # User rejected - skip displaying result and wait for new input
+                continue
 
         # Display result
         if "structured_response" in response:
