@@ -1,9 +1,7 @@
-import os
-
 from fastapi import FastAPI, HTTPException, status
-from pydantic import BaseModel, Field
 from agent_factory import create_weather_agent
 from weather_response import WeatherResponse
+from weather_query import WeatherQuery
 
 app = FastAPI(title="LangChain HITL")
 
@@ -16,10 +14,6 @@ async def health() -> dict[str, str]:
 @app.get("/")
 async def root() -> dict[str, str]:
     return {"message": "LangChain Human-in-the-Loop API"}
-
-
-class WeatherQuery(BaseModel):
-    query: str = Field(description="User's weather question")
 
 
 @app.post(

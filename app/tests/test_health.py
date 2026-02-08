@@ -8,7 +8,7 @@ from main import app
 class TestHealth:
     """Tests for health endpoint."""
 
-    def test_health_endpoint(self):
+    def test_health_endpoint(self) -> None:
         """
         Test the /health endpoint returns correct status.
 
