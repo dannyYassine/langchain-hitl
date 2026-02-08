@@ -12,6 +12,8 @@ from langchain.agents.middleware import (
     ModelCallLimitMiddleware,
     ToolCallLimitMiddleware,
 )
+from langchain.agents.middleware import HumanInTheLoopMiddleware
+from langgraph.checkpoint.memory import InMemorySaver
 
 from weather_response import WeatherResponse
 from tools import get_weather
@@ -43,6 +45,13 @@ def create_weather_agent():
                 exit_behavior="end",
             ),
             ToolCallLimitMiddleware(thread_limit=20, run_limit=10),
+            HumanInTheLoopMiddleware(
+                interrupt_on={
+                    "get_weather": True,
+                },
+                description_prefix="Tool execution pending approval",
+            ),
         ],
+        checkpointer=InMemorySaver(),
     )
     return agent
