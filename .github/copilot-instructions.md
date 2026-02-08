@@ -8,6 +8,13 @@ This is a LangChain Human-in-the-Loop (HITL) application built with FastAPI, run
 
 **ALWAYS** use multiple subagents to accelerate development.
 
+## Constraints
+
+- **NEVER** add secrets, API keys, passwords, or any sensitive credentials to `.env.example` files
+- `.env.example` should only contain placeholder/default values or example formats (e.g., `OPENAI_API_KEY=your_api_key_here`)
+-
+- Actual secrets belong in `.env` files, which must be gitignored
+
 ## Tech Stack
 
 - **Python**: 3.12+
