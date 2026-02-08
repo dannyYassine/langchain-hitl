@@ -16,6 +16,7 @@ from langchain.agents.middleware import (
 from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
 
+from validate_weather_question_guardrail import ValidateWeatherQuestionGuardrail
 from weather_response import WeatherResponse
 from tools import get_weather, get_canadian_weather
 
@@ -46,6 +47,7 @@ def create_weather_agent() -> Any:
                 exit_behavior="end",
             ),
             ToolCallLimitMiddleware(thread_limit=20, run_limit=10),  # type: ignore[list-item]
+            ValidateWeatherQuestionGuardrail(),
             HumanInTheLoopMiddleware(
                 interrupt_on={"get_weather": False, "get_canadian_weather": True},
                 description_prefix="Tool execution pending approval",

@@ -97,7 +97,14 @@ if __name__ == "__main__":
                 continue
 
         # Display result
-        if "structured_response" in response:
+        if (
+            "structured_response" in response
+            and response["structured_response"] is not None
+        ):
             print(f"\nAgent: {response['structured_response'].summary}\n")
-        elif "__interrupt__" not in response:
-            print(f"\nAgent completed the task.\n")
+        else:
+            last_message = response["messages"][-1] if response["messages"] else None
+            if last_message:
+                print(f"\nAgent: {last_message.content}\n")
+        # elif "__interrupt__" not in response:
+        #     print(f"\nAgent completed the task.\n")
