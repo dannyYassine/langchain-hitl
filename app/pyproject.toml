@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]",
+    "jinja2>=3.1.6",
     "langchain",
     "langchain-openai",
     "langchain-postgres",

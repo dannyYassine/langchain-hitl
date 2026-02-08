@@ -1,0 +1,46 @@
+{# Request Card Component Variables: - req: AgentRequest object with id, title,
+status, progress, created_at #}
+<div
+  id="request-card-{{ req.id }}"
+  class="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700 hover:border-gray-600 transition-colors"
+>
+  <!-- Header with title and menu -->
+  <div class="flex justify-between items-start mb-4">
+    <div class="flex-1">
+      <h3 class="text-lg font-semibold text-white mb-2">{{ req.title }}</h3>
+      {% include 'components/status_badge.html' with context %}
+    </div>
+
+    <!-- Three-dot menu -->
+    <div class="relative ml-4">
+      <button class="text-gray-400 hover:text-gray-300 focus:outline-none">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Timestamp -->
+  <div class="text-sm text-gray-400 mb-3">Started {{ req.created_at }}</div>
+
+  <!-- Progress bar -->
+  <div class="mb-4">
+    <div class="flex justify-between text-xs text-gray-400 mb-1">
+      <span>Progress</span>
+      <span>{{ req.progress }}%</span>
+    </div>
+    <div class="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+      <div
+        class="h-full rounded-full transition-all duration-300 {% if req.status.value == 'RUNNING' %}bg-green-500 {% elif req.status.value == 'HITL_REQUIRED' %}bg-orange-500 {% elif req.status.value == 'COMPLETED' %}bg-blue-500 {% else %}bg-gray-500{% endif %}"
+        style="width: {{ req.progress }}%"
+      ></div>
+    </div>
+  </div>
+
+  <!-- HITL Approval Section (if needed) -->
+  {% if req.status.value == 'HITL_REQUIRED' %} {% set request_id = req.id %} {%
+  include 'components/hitl_approval.html' %} {% endif %}
+</div>

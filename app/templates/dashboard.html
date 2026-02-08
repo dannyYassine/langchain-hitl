@@ -1,0 +1,161 @@
+{% extends "base.html" %} {% block title %}Dashboard - LangChain HITL{% endblock
+%} {% block extra_head %}
+<style>
+  .dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    min-height: calc(100vh - 4rem);
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 3rem;
+  }
+
+  .sidebar {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .dashboard-header h1 {
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dashboard-header p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+  }
+
+  .input-section {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .sidebar-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .sidebar-header h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .sidebar-header p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  /* Responsive design */
+  @media (max-width: 1024px) {
+    .dashboard-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .sidebar {
+      position: relative;
+      top: 0;
+      max-height: none;
+    }
+
+    .main-content {
+      padding-top: 1.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding: 1rem;
+    }
+
+    .dashboard-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .dashboard-header p {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="dashboard-layout">
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <header class="dashboard-header">
+      <h1>LangChain HITL Dashboard</h1>
+      <p>Human-in-the-Loop AI Agent Interaction</p>
+    </header>
+
+    <section class="input-section">
+      {% include 'components/input_form.html' %}
+    </section>
+  </main>
+
+  <!-- Right Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>Active Requests</h2>
+      <p>Monitor ongoing agent interactions</p>
+    </div>
+
+    {% include 'components/active_requests.html' %}
+  </aside>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // HTMX event listeners for enhanced UX
+  document.body.addEventListener("htmx:configRequest", (event) => {
+    // Add custom headers or configuration if needed
+    console.log("Request configured:", event.detail);
+  });
+
+  document.body.addEventListener("htmx:afterRequest", (event) => {
+    // Handle successful requests
+    if (event.detail.successful) {
+      console.log("Request successful:", event.detail);
+    } else {
+      console.error("Request failed:", event.detail);
+    }
+  });
+
+  document.body.addEventListener("htmx:responseError", (event) => {
+    // Handle response errors
+    console.error("Response error:", event.detail);
+    alert("An error occurred while processing your request.");
+  });
+
+  // Optional: Auto-refresh active requests every 5 seconds
+  setInterval(() => {
+    const activeRequestsElement = document.querySelector(
+      '[hx-get*="active-requests"]'
+    );
+    if (activeRequestsElement) {
+      htmx.trigger(activeRequestsElement, "refresh");
+    }
+  }, 5000);
+</script>
+{% endblock %}

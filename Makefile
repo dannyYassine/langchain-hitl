@@ -30,6 +30,6 @@ shell:
 cli:
 	docker exec -it app uv run cli.py
 api: 
-	docker exec -it app /app/.venv/bin/fastapi run main.py --port 8000 --host 0.0.0.0
+	docker exec -it app uv run fastapi run main.py --port 8000 --host 0.0.0.0
 test:
 	docker exec app uv run pytest

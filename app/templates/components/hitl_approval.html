@@ -1,0 +1,50 @@
+{# HITL Approval Component Variables: - request_id: ID of the request requiring
+approval #}
+<div class="mt-4 border-t border-gray-700 pt-4">
+  <!-- Action Required Badge -->
+  <div class="flex items-center justify-between mb-3">
+    <span
+      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-400 border border-orange-500/30"
+    >
+      ACTION REQUIRED
+    </span>
+    <span class="text-xs text-gray-400">
+      Waiting for <span class="font-mono text-orange-400">2m</span>
+    </span>
+  </div>
+
+  <!-- Approval Message -->
+  <p class="text-sm text-gray-300 mb-4">
+    The agent needs your approval to proceed with the following changes...
+  </p>
+
+  <!-- Action Buttons -->
+  <div class="flex space-x-3">
+    <!-- Approve Button -->
+    <button
+      class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+      hx-post="/api/requests/{{ request_id }}/approve"
+      hx-target="#request-card-{{ request_id }}"
+      hx-swap="outerHTML"
+      hx-indicator="#loading-{{ request_id }}"
+    >
+      Approve
+    </button>
+
+    <!-- Deny Button -->
+    <button
+      class="flex-1 px-4 py-2 bg-transparent hover:bg-gray-700 text-gray-300 text-sm font-medium rounded-lg border border-gray-600 hover:border-gray-500 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+      hx-post="/api/requests/{{ request_id }}/deny"
+      hx-target="#request-card-{{ request_id }}"
+      hx-swap="outerHTML"
+      hx-indicator="#loading-{{ request_id }}"
+    >
+      Deny
+    </button>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div id="loading-{{ request_id }}" class="htmx-indicator mt-3 text-center">
+    <span class="text-xs text-gray-400">Processing...</span>
+  </div>
+</div>

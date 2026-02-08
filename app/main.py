@@ -1,49 +1,17 @@
-from fastapi import FastAPI, HTTPException, status
-from agent_factory import create_weather_agent
-from weather_response import WeatherResponse
-from weather_query import WeatherQuery
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+from mock_data import create_mock_data
+from routes.api import get_requests_store, router
 
 app = FastAPI(title="LangChain HITL")
 
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-@app.get("/health")
-async def health() -> dict[str, str]:
-    return {"status": "ok"}
+# Include API routes
+app.include_router(router)
 
-
-@app.get("/")
-async def root() -> dict[str, str]:
-    return {"message": "LangChain Human-in-the-Loop API"}
-
-
-@app.post(
-    "/weather",
-    response_model=WeatherResponse,
-    description="Get weather information using AI agent",
-)
-async def get_weather_info(query: WeatherQuery) -> WeatherResponse:
-    """
-    Process weather query using LangChain agent.
-
-    Args:
-        query: User's weather question
-
-    Returns:
-        WeatherResponse with structured weather data
-
-    Raises:
-        HTTPException: If agent processing fails
-    """
-    try:
-        agent = create_weather_agent()
-        response = agent.invoke(
-            {"messages": [{"role": "user", "content": query.query}]}
-        )
-        weatherResponse: WeatherResponse = response["structured_response"]
-
-        return weatherResponse
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Agent processing failed: {str(e)}",
-        )
+# Get requests store and initialize mock data on startup
+requests_store = get_requests_store()
+create_mock_data(requests_store)

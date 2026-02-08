@@ -84,6 +84,7 @@ Makefile              # Development shortcuts
 - Use **async/await** for FastAPI endpoints
 - Prefer **f-strings** for string formatting
 - Use **Pydantic models** for data validation
+- **One class per file** - Each Python file should contain only one class definition (exceptions: small related enums or nested classes)
 
 ### FastAPI Patterns
 

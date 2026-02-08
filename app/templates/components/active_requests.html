@@ -1,0 +1,258 @@
+<div id="active-requests-panel" class="requests-panel">
+  <div
+    id="active-requests-list"
+    class="requests-list"
+    hx-get="/api/requests/active"
+    hx-trigger="every 3s"
+    hx-swap="innerHTML"
+  >
+    {% if requests and requests|length > 0 %} {% for req in requests %} {%
+    include 'components/request_card.html' %} {% endfor %} {% else %}
+    <!-- Placeholder content when no requests -->
+    <div class="empty-state">
+      <svg
+        class="empty-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <p class="empty-text">No active requests</p>
+      <p class="empty-subtext">Your requests will appear here</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .requests-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  .menu-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+  }
+
+  .menu-button:hover {
+    background: #f3f4f6;
+  }
+
+  .menu-icon {
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+  }
+
+  .requests-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .requests-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .requests-list::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 3px;
+  }
+
+  .requests-list::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+  }
+
+  .requests-list::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+    flex: 1;
+  }
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+  }
+
+  .empty-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+    margin: 0 0 8px 0;
+  }
+
+  .empty-subtext {
+    font-size: 14px;
+    color: #9ca3af;
+    margin: 0;
+  }
+
+  /* Request item styles (for when requests are loaded) */
+  .request-item {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.2s ease;
+  }
+
+  .request-item:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 8px;
+  }
+
+  .request-id {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .request-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .status-pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-processing {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .status-awaiting {
+    background: #fce7f3;
+    color: #9f1239;
+  }
+
+  .status-completed {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .request-query {
+    font-size: 14px;
+    color: #374151;
+    margin: 0 0 8px 0;
+    line-height: 1.5;
+  }
+
+  .request-time {
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  .status-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 2px;
+  }
+
+  .status-pending .status-indicator {
+    background: #f59e0b;
+  }
+
+  .status-processing .status-indicator {
+    background: #3b82f6;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .status-awaiting .status-indicator {
+    background: #ec4899;
+  }
+
+  .status-completed .status-indicator {
+    background: #10b981;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .requests-panel {
+      padding: 20px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+    }
+  }
+</style>
