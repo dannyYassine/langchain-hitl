@@ -16,7 +16,7 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
 
 from weather_response import WeatherResponse
-from tools import get_weather
+from tools import get_weather, get_canadian_weather
 
 
 def create_weather_agent():
@@ -35,7 +35,7 @@ def create_weather_agent():
     """
     agent = create_agent(
         model="gpt-4o-mini",
-        tools=[get_weather],
+        tools=[get_weather, get_canadian_weather],
         system_prompt="You are a helpful assistant",
         response_format=ToolStrategy(WeatherResponse),
         middleware=[
@@ -46,9 +46,7 @@ def create_weather_agent():
             ),
             ToolCallLimitMiddleware(thread_limit=20, run_limit=10),
             HumanInTheLoopMiddleware(
-                interrupt_on={
-                    "get_weather": True,
-                },
+                interrupt_on={"get_weather": False, "get_canadian_weather": True},
                 description_prefix="Tool execution pending approval",
             ),
         ],

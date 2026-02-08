@@ -9,9 +9,17 @@ by the LangChain agent to answer weather-related queries.
 import requests
 
 
+def get_canadian_weather(city: str) -> dict:
+    """
+    Only use for canadian weather for a given city using Open-Meteo API (free, no API key required).
+    """
+    # Placeholder implementation - replace with actual file search logic
+    return get_weather(city)
+
+
 def get_weather(city: str) -> dict:
     """
-    Get weather for a given city using Open-Meteo API (free, no API key required).
+    Only use to United states (US) weather for a given city using Open-Meteo API (free, no API key required).
 
     Args:
         city: Name of the city to get weather for
