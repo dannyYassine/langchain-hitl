@@ -8,6 +8,7 @@ help:
 	@echo "  make up           Build and start services (detached)"
 	@echo "  make logs         Follow docker compose logs"
 	@echo "  make shell        Open a shell in the app service"
+	@echo "  make test         Run pytest tests"
 
 app-install:
 	$(DC) exec app uv sync --frozen
@@ -30,3 +31,5 @@ cli:
 	docker exec -it app uv run cli.py
 api: 
 	docker exec -it app /app/.venv/bin/fastapi run main.py --port 8000 --host 0.0.0.0
+test:
+	docker exec app uv run pytest

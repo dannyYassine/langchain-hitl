@@ -139,6 +139,221 @@ async def endpoint():
         )
 ```
 
+### Testing Conventions
+
+#### Test Structure
+
+**ALWAYS** use class-based tests to organize related test cases:
+
+```python
+"""Tests for health check endpoint."""
+
+from fastapi.testclient import TestClient
+
+from main import app
+
+
+class TestHealth:
+    """Tests for health endpoint."""
+
+    def test_health_endpoint(self):
+        """
+        Test the /health endpoint returns correct status.
+
+        Verifies that:
+        - Status code is 200
+        - Response JSON contains correct status
+        """
+        client = TestClient(app)
+        response = client.get("/health")
+
+        assert response.status_code == 200
+        assert response.json() == {"status": "ok"}
+```
+
+**Key rules:**
+
+- Use **class-based tests** (class name starts with `Test`)
+- Group related tests in the same class
+- Each test method starts with `test_`
+- Include comprehensive docstrings explaining what is tested
+- No `__init__` method in test classes
+
+#### FastAPI Testing Patterns
+
+**Use TestClient for synchronous testing:**
+
+```python
+from fastapi.testclient import TestClient
+from main import app
+
+class TestEndpoints:
+    """Test API endpoints."""
+
+    def test_endpoint(self):
+        """Test endpoint behavior."""
+        client = TestClient(app)
+        response = client.get("/endpoint")
+        assert response.status_code == 200
+```
+
+**For async testing with external dependencies:**
+
+```python
+import pytest
+from httpx import AsyncClient
+from main import app
+
+class TestAsyncEndpoints:
+    """Test async API endpoints."""
+
+    @pytest.mark.asyncio
+    async def test_async_endpoint(self):
+        """Test async endpoint behavior."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+            response = await client.get("/endpoint")
+            assert response.status_code == 200
+```
+
+#### Test Organization
+
+- Tests live in `app/tests/` directory
+- One test file per module: `test_<module_name>.py`
+- Test files must have `__init__.py` in the tests directory
+- Use pytest markers to categorize tests:
+  - `@pytest.mark.unit` - Unit tests with mocked dependencies
+  - `@pytest.mark.integration` - Tests requiring external services
+
+```python
+import pytest
+
+class TestWeatherAPI:
+    """Tests for weather API endpoints."""
+
+    @pytest.mark.unit
+    def test_weather_response_model(self):
+        """Test weather response validation."""
+        # Test with mocked data
+        pass
+
+    @pytest.mark.integration
+    def test_weather_api_call(self):
+        """Test actual weather API integration."""
+        # Test with real API calls
+        pass
+```
+
+#### Fixtures and Setup
+
+Use `setup_method` and `teardown_method` for per-test setup:
+
+```python
+class TestWithSetup:
+    """Tests requiring setup/teardown."""
+
+    def setup_method(self):
+        """Set up test fixtures before each test."""
+        self.client = TestClient(app)
+        self.test_data = {"key": "value"}
+
+    def teardown_method(self):
+        """Clean up after each test."""
+        # Cleanup code here
+        pass
+
+    def test_with_fixture(self):
+        """Test using setup fixtures."""
+        response = self.client.post("/endpoint", json=self.test_data)
+        assert response.status_code == 200
+```
+
+Use `setup_class` and `teardown_class` for shared setup:
+
+```python
+class TestWithClassSetup:
+    """Tests with shared class-level fixtures."""
+
+    @classmethod
+    def setup_class(cls):
+        """Set up fixtures shared across all tests in class."""
+        cls.client = TestClient(app)
+
+    @classmethod
+    def teardown_class(cls):
+        """Clean up class-level fixtures."""
+        pass
+```
+
+#### Assertions
+
+Use clear, specific assertions:
+
+```python
+# ✅ Good - Specific assertions
+assert response.status_code == 200
+assert response.json() == {"status": "ok"}
+assert "error" not in response.json()
+
+# ✅ Good - Testing structure
+data = response.json()
+assert "temperature" in data
+assert isinstance(data["temperature"], float)
+
+# ❌ Avoid - Vague assertions
+assert response  # What are we checking?
+assert True  # Meaningless
+```
+
+#### Mocking External Dependencies
+
+Mock external API calls and LLM interactions:
+
+```python
+from unittest.mock import patch, MagicMock
+
+class TestWithMocks:
+    """Tests with mocked dependencies."""
+
+    @patch("tools.requests.get")
+    def test_weather_api_mock(self, mock_get):
+        """Test weather endpoint with mocked API."""
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"temperature": 20.0}
+        mock_get.return_value = mock_response
+
+        client = TestClient(app)
+        response = client.post("/weather", json={"city": "Paris"})
+
+        assert response.status_code == 200
+        mock_get.assert_called_once()
+```
+
+#### Running Tests
+
+```bash
+# Run all tests
+make test  # or: docker exec app uv run pytest
+
+# Run specific test file
+docker exec app uv run pytest tests/test_health.py
+
+# Run specific test class
+docker exec app uv run pytest tests/test_health.py::TestHealth
+
+# Run specific test method
+docker exec app uv run pytest tests/test_health.py::TestHealth::test_health_endpoint
+
+# Run tests with specific marker
+docker exec app uv run pytest -m unit
+docker exec app uv run pytest -m integration
+
+# Run with verbose output
+docker exec app uv run pytest -v
+
+# Run with coverage
+docker exec app uv run pytest --cov=. --cov-report=html
+```
+
 ## Environment Variables
 
 Required environment variables (configured in `.env`):

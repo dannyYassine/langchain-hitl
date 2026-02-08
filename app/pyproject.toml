@@ -15,7 +15,26 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["mypy>=1.19.1", "ruff>=0.15.0", "types-requests>=2.32.4.20260107"]
+dev = [
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "ruff>=0.15.0",
+    "types-requests>=2.32.4.20260107",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+python_classes = ["Test*"]
+asyncio_mode = "auto"
+addopts = ["-v", "--strict-markers", "--tb=short"]
+markers = [
+    "asyncio: marks tests as async",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
 
 [tool.mypy]
 python_version = "3.12"
