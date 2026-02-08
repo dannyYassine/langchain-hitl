@@ -7,7 +7,7 @@ from typing import Any, Optional
 class ValidateWeatherQuestionGuardrail(AgentMiddleware):
     """Middleware to validate weather-related questions."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.safety_model = init_chat_model("gpt-5-mini")
 
@@ -50,14 +50,16 @@ class ValidateWeatherQuestionGuardrail(AgentMiddleware):
         Returns:
             Lowercase user message content, or None if no valid user message found
         """
-        if not state["messages"]:
+        if not state.messages:
             return None
 
-        first_message = state["messages"][-1]
+        first_message = state.messages[-1]
         if first_message.type != "human":
             return None
 
-        return first_message.content.lower()
+        message: str = first_message.content
+
+        return message.lower()
 
     def _get_prompt(self, content: str) -> str:
         # Use a model to evaluate safety

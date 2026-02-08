@@ -26,7 +26,8 @@ ps:
 
 shell:
 	$(DC) run --rm app bash
-
+sync:
+	$(DC) exec app uv sync --frozen
 cli:
 	docker exec -it app uv run cli.py
 api: 
