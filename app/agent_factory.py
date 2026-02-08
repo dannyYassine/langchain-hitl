@@ -34,7 +34,7 @@ def create_weather_agent():
         Agent: Configured LangChain agent ready to process weather queries
     """
     agent = create_agent(
-        model="gpt-4o-mini",
+        model="gpt-5-mini",
         tools=[get_weather, get_canadian_weather],
         system_prompt="You are a helpful assistant",
         response_format=ToolStrategy(WeatherResponse),
