@@ -6,10 +6,11 @@ using the Open-Meteo API (free, no API key required). These tools are used
 by the LangChain agent to answer weather-related queries.
 """
 
+from typing import Any
 import requests
 
 
-def get_canadian_weather(city: str) -> dict:
+def get_canadian_weather(city: str) -> dict[str, Any]:
     """
     Only use for canadian weather for a given city using Open-Meteo API (free, no API key required).
     """
@@ -17,7 +18,7 @@ def get_canadian_weather(city: str) -> dict:
     return get_weather(city)
 
 
-def get_weather(city: str) -> dict:
+def get_weather(city: str) -> dict[str, Any]:
     """
     Only use to United states (US) weather for a given city using Open-Meteo API (free, no API key required).
 
@@ -46,6 +47,6 @@ def get_weather(city: str) -> dict:
         weather_response = requests.get(weather_url, timeout=10)
         weather_data = weather_response.json()
 
-        return weather_data
+        return weather_data  # type: ignore[no-any-return]
     except Exception as e:
         return {"error": f"Failed to fetch weather: {str(e)}"}

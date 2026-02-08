@@ -9,12 +9,12 @@ app = FastAPI(title="LangChain HITL")
 
 
 @app.get("/health")
-async def health():
+async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
 @app.get("/")
-async def root():
+async def root() -> dict[str, str]:
     return {"message": "LangChain Human-in-the-Loop API"}
 
 
@@ -27,7 +27,7 @@ class WeatherQuery(BaseModel):
     response_model=WeatherResponse,
     description="Get weather information using AI agent",
 )
-async def get_weather_info(query: WeatherQuery):
+async def get_weather_info(query: WeatherQuery) -> WeatherResponse:
     """
     Process weather query using LangChain agent.
 
@@ -45,7 +45,9 @@ async def get_weather_info(query: WeatherQuery):
         response = agent.invoke(
             {"messages": [{"role": "user", "content": query.query}]}
         )
-        return response["structured_response"]
+        weatherResponse: WeatherResponse = response["structured_response"]
+
+        return weatherResponse
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -6,6 +6,7 @@ configurations, middleware, and tools. It encapsulates agent creation logic
 to promote reusability and separation of concerns.
 """
 
+from typing import Any
 from langchain.agents import create_agent
 from langchain.agents.structured_output import ToolStrategy
 from langchain.agents.middleware import (
@@ -19,7 +20,7 @@ from weather_response import WeatherResponse
 from tools import get_weather, get_canadian_weather
 
 
-def create_weather_agent():
+def create_weather_agent() -> Any:
     """
     Create a weather agent with configured middleware and structured output.
 
@@ -39,12 +40,12 @@ def create_weather_agent():
         system_prompt="You are a helpful assistant",
         response_format=ToolStrategy(WeatherResponse),
         middleware=[
-            ModelCallLimitMiddleware(
+            ModelCallLimitMiddleware(  # type: ignore[list-item]
                 thread_limit=10,
                 run_limit=5,
                 exit_behavior="end",
             ),
-            ToolCallLimitMiddleware(thread_limit=20, run_limit=10),
+            ToolCallLimitMiddleware(thread_limit=20, run_limit=10),  # type: ignore[list-item]
             HumanInTheLoopMiddleware(
                 interrupt_on={"get_weather": False, "get_canadian_weather": True},
                 description_prefix="Tool execution pending approval",
