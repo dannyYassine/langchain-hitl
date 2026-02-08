@@ -298,7 +298,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 
 # 4. Local imports
-from app.agents import create_agent
+from agents import create_agent
 ```
 
 ## Documentation
