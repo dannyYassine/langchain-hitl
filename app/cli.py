@@ -29,6 +29,11 @@ def handle_interrupt(interrupt_data: list) -> tuple[list[dict], bool]:
 
         for action in actions:
             tool_name = action.get("name", "unknown")
+
+            if tool_name == "get_canadian_weather":
+                print(f"⚠️  This tool requires approval: {tool_name}")
+                print("Sending notification to user for approval...")
+
             tool_args = action.get("args", action.get("arguments", {}))
 
             print(f"\n⚠️  Approval needed: {tool_name}({tool_args})")

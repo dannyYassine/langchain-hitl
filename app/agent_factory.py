@@ -55,4 +55,5 @@ def create_weather_agent() -> Any:
         ],
         checkpointer=InMemorySaver(),
     )
+
     return agent

@@ -50,10 +50,10 @@ class ValidateWeatherQuestionGuardrail(AgentMiddleware):
         Returns:
             Lowercase user message content, or None if no valid user message found
         """
-        if not state.messages:
+        if not state["messages"]:
             return None
 
-        first_message = state.messages[-1]
+        first_message = state["messages"][-1]
         if first_message.type != "human":
             return None
 
