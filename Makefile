@@ -31,3 +31,5 @@ app:
 
 agents: 
 	docker exec -it app uv run agents.py
+app-api: 
+	docker exec -it app /app/.venv/bin/fastapi run main.py --port 8000 --host 0.0.0.0
